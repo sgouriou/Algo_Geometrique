@@ -2,10 +2,13 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string> 
 #include <map>
 #include <utility>
 #include <GL/glew.h>
 #include "myvector3d.h"
+
+
 
 using namespace std;
 
@@ -67,17 +70,67 @@ bool myMesh::readFile(std::string filename)
 		stringstream myline(s);
 		myline >> t;
 		if (t == "g") {}
+
+		// vertex Case
 		else if (t == "v")
 		{
+			double x = 0.0;
+			myline >> u;
+			x = stof(u);
+
+			double y = 0.0;
+			myline >> u;
+			y = stof(u);
+
+			double z = 0.0;
+			myline >> u;
+			z = stof(u);
+
+
+			myVertex *v = new myVertex();
+			v->point = new myPoint3D(x,y,z);
+			vertices.push_back(v);
+
 		}
 		else if (t == "mtllib") {}
 		else if (t == "usemtl") {}
 		else if (t == "s") {}
+
+		//Faces 
 		else if (t == "f")
 		{
-			cout << "Face indices: "; 
-			while (myline >> u) cout << atoi((u.substr(0, u.find("/"))).c_str()) << " ";
-			cout << endl;
+			//cout << "Face indices: "; 
+			//while (myline >> u) cout << atoi((u.substr(0, u.find("/"))).c_str()) << " ";
+			//cout << endl;
+
+			myFace* face = new myFace();
+			//vector<int> vertexIndicesofFace;
+			
+			vector<int> faceIndices;
+			vector<myHalfedge*> tempHalfedges;
+			
+			string tempStr;
+			while(myline >> tempStr)
+			{
+				
+				//vertexIndicesofFace.push_back(stoi(tempStr));
+				tempHalfedges.push_back(new myHalfedge());
+			}
+			
+			for (int i = 0; i < tempHalfedges.size() -1; i++)
+			{
+				myHalfedge* a = new myHalfedge();
+
+				int next = (i + 1) % tempHalfedges.size();
+				int prev = (i - 1 + tempHalfedges.size()) % tempHalfedges.size();
+
+
+
+
+
+			}
+
+
 		}
 	}
 

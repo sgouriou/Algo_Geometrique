@@ -10,6 +10,8 @@ public:
 
 	myVector3D *normal;
 
+
+
 	int index; //use this variable as you wish.
 
 	void computeNormal();

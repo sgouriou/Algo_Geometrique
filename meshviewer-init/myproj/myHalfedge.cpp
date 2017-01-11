@@ -12,6 +12,11 @@ myHalfedge::myHalfedge(void)
 void myHalfedge::copy(myHalfedge *ie)
 {
 /**** TODO ****/
+	//myHalfedge toReturn;
+	//toReturn.source = source;
+
+	//return toReturn;
+
 }
 
 myHalfedge::~myHalfedge(void)
