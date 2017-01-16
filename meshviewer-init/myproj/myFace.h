@@ -17,4 +17,9 @@ public:
 	void computeNormal();
 	myFace(void);
 	~myFace(void);
+
+	bool isTriangle();
+	bool isQuad();
+	int getSize();
+
 };

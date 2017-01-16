@@ -18,6 +18,12 @@ GLuint initshaders(GLenum type, const char *filename);
 GLuint initprogram(GLuint, GLuint);
 void display();
 
+
+
+
+
+
+
 GLuint  shaderprogram;
 
 // width and height of the window.

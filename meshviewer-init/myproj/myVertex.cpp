@@ -3,6 +3,8 @@
 #include "myHalfedge.h"
 #include "myFace.h"
 
+#include <iostream>
+
 myVertex::myVertex(void)
 {
 	point = NULL;
@@ -18,4 +20,29 @@ myVertex::~myVertex(void)
 void myVertex::computeNormal()
 {
 	/**** TODO ****/
+
+
+
+	myVector3D* tempNormal = new myVector3D(0,0,0);
+
+	myHalfedge* tempHE = originof;
+
+	if (tempHE == NULL)
+		return;
+
+	do {
+		*tempNormal += *(tempHE->adjacent_face->normal);
+
+
+		tempHE = tempHE->twin->next;
+
+
+
+	} while(tempHE != originof);
+
+	tempNormal->normalize();
+
+	*normal = *tempNormal;
+
+
 }

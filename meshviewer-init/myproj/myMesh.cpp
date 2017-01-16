@@ -264,6 +264,13 @@ bool myMesh::readFile(std::string filename)
 void myMesh::computeNormals()
 {
 	/**** TODO ****/
+
+	for (vector<myFace *>::iterator it = faces.begin(); it != faces.end(); it++)
+		(*it)->computeNormal();
+	for (vector<myVertex *>::iterator it = vertices.begin(); it != vertices.end(); it++)
+		(*it)->computeNormal();
+
+	std::cout << "end Compute Normals :" << std::endl;
 }
 
 void myMesh::normalize()
@@ -328,12 +335,143 @@ void myMesh::subdivisionCatmullClark()
 void myMesh::triangulate()
 {
 	/**** TODO ****/
+
+	for (myFace* f : faces)
+	{
+		triangulate(f);
+	}
+
+	
+
 }
 
 //return false if already triangle, true othewise.
 bool myMesh::triangulate(myFace *f)
 {
+	if (f->isTriangle())
+		return false;
+
+	//else if (f->isQuad())
+	//{
+		//myHalfedge* in = new myHalfedge();
+		//myHalfedge* out = new myHalfedge();
+
+		//myFace* a = new myFace();
+		//myFace* b = new myFace();
+
+
+		//in->next = f->adjacent_halfedge->next->next;
+		//in->prev = f->adjacent_halfedge->next->next->next;
+		//in->source = f->adjacent_halfedge->source;
+		//in->twin = out;
+
+		//out->next = f->adjacent_halfedge;
+		//out->prev = f->adjacent_halfedge->next;
+		//out->source = f->adjacent_halfedge->next->next->source;
+		//out->twin = in;
+
+		//a->adjacent_halfedge = f->adjacent_halfedge;
+		//b->adjacent_halfedge = out;
+
+		//f->adjacent_halfedge->next->next = out;
+		//f->adjacent_halfedge = out->prev;
+		//f->adjacent_halfedge->next->adjacent_face = a;
+
+
+
+	//}
+
 	/**** TODO ****/
-	return false;
+	vector<myHalfedge*> in;
+	vector<myHalfedge*> out;
+	vector<myFace*> nf;
+
+	myHalfedge* e = f->adjacent_halfedge->next;
+	int n = f->getSize();
+
+	for (int i = 0; i < n - 2; i++)
+	{
+		in.push_back(new myHalfedge());
+		out.push_back(new myHalfedge());
+		nf.push_back(new myFace());
+	}
+	//because we needone additionnal face
+	
+	in[0] = f->adjacent_halfedge;
+
+	out[n - 3] = in[0]->prev;
+
+
+	myHalfedge* nextE;
+	for (int i = 0; i < n - 2; i++)
+	{
+		nextE = e->next;
+
+		nf[i]->adjacent_halfedge = e;
+
+		in[i]->next = e;
+		in[i]->prev = out[i];
+		in[i]->source = f->adjacent_halfedge->source;
+		in[i]->adjacent_face = nf[i];
+
+		out[i]->next = in[i];
+		out[i]->prev = e;
+		out[i]->source = e->twin->source;
+		out[i]->adjacent_face = nf[i];
+
+		e->next = out[i];
+		e->prev = in[i];
+		//e->source;
+		e->adjacent_face = nf[i];
+
+		if (i != 0 && i != (n - 3))
+		{
+			in[i]->twin = out[i - 1];
+			out[i]->twin = in[i + 1];
+		}
+
+		else if (i == 0)
+		{
+			//in[i]->twin = out[i - 1];
+			out[i]->twin = in[i + 1];
+		}
+
+		else if (i == (n - 3))
+		{
+			in[i]->twin = out[i - 1];
+			//out[i]->twin = in[i + 1];
+		}
+
+		else
+			cout << "error error \n";
+
+		e = nextE;
+
+	}
+
+	
+	
+	halfedges.push_back(out[0]);
+	for (int i = 1; i < n - 3; i++)
+	{
+
+			halfedges.push_back(in[i]);
+			halfedges.push_back(out[i]);
+
+	}
+	halfedges.push_back(in[n-3]);
+
+
+	*f = *nf[0];
+	for (int i = 1; i < n - 2; i++)
+	{
+		cout << i << " face added \n";
+		faces.push_back(nf[i]);
+
+	}
+
+		
+
+	return true;
 }
 
