@@ -9,6 +9,10 @@
 #include <glm/gtc/matrix_transform.hpp> 
 #include <glm/gtc/type_ptr.hpp>     
 
+//personnal libraries
+#include <sstream>
+#include <vector>
+
 void menu(int item);
 GLuint initshaders(GLenum type, const char *filename);
 GLuint initprogram(GLuint, GLuint);
@@ -681,3 +685,8 @@ GLuint initprogram(GLuint vertexshader, GLuint fragmentshader)
 	}
 	return program;
 }
+
+
+
+// personnal helpers functions
+

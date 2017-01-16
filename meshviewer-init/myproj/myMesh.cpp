@@ -10,7 +10,26 @@
 
 
 
+
 using namespace std;
+
+
+void split(const std::string &s, char delim, std::vector<std::string> &elems) {
+	std::stringstream ss;
+	ss.str(s);
+	std::string item;
+	while (std::getline(ss, item, delim)) {
+		elems.push_back(item);
+	}
+}
+
+
+std::vector<std::string> split(const std::string &s, char delim) {
+	std::vector<std::string> elems;
+	split(s, delim, elems);
+	return elems;
+}
+
 
 myMesh::myMesh(void)
 {
@@ -114,6 +133,8 @@ void myMesh::checkMesh()
 
 bool myMesh::readFile(std::string filename)
 {
+
+	cout << "hello there \n";
  
 	string s, t, u;
 	vector<int> faceids;
@@ -131,13 +152,17 @@ bool myMesh::readFile(std::string filename)
 
 	while (getline(fin, s))
 	{
+		cout << "got a line here\n";
 		stringstream myline(s);
 		myline >> t;
+		cout << "[" << t << "]" << "\n";
 		if (t == "g") {}
 
 		// vertex Case
 		else if (t == "v")
 		{
+
+			cout << "got a vertex here\n";
 			double x = 0.0;
 			myline >> u;
 			x = stof(u);
@@ -153,6 +178,7 @@ bool myMesh::readFile(std::string filename)
 
 			myVertex *v = new myVertex();
 			v->point = new myPoint3D(x,y,z);
+			cout << "added x : " << x << " y:" << y << " z : " << z << "\n";
 			vertices.push_back(v);
 
 		}
@@ -172,18 +198,20 @@ bool myMesh::readFile(std::string filename)
 			
 			vector<int> vertexIndicesofFace;
 			vector<myHalfedge*> tempHalfedges;
+			vector<string> separated;
 			
 			string tempStr;
 			while(myline >> tempStr)
 			{
-		
-				vertexIndicesofFace.push_back(stoi(tempStr));
+				separated = split(tempStr, '/');
+				cout << "face sep : " <<  separated[0] << endl;
+				vertexIndicesofFace.push_back(stoi(separated[0]) - 1);
 				tempHalfedges.push_back(new myHalfedge());
 			}
 			
-			for (int i = 0; i < tempHalfedges.size() -1; i++)
+			for (int i = 0; i < (tempHalfedges.size()); i++)
 			{
-				myHalfedge* a = new myHalfedge();
+				//myHalfedge* a = new myHalfedge();
 
 				int next = (i + 1) % tempHalfedges.size();
 				int prev = (i - 1 + tempHalfedges.size()) % tempHalfedges.size();
@@ -197,7 +225,7 @@ bool myMesh::readFile(std::string filename)
 				tempHalfedges[i]->prev = tempHalfedges[prev];
 				tempHalfedges[i]->adjacent_face = currentFace;
 
-				
+
 				// pushing new halfEgde
 				halfedges.push_back(tempHalfedges[i]);
 
@@ -211,19 +239,19 @@ bool myMesh::readFile(std::string filename)
 					tempHalfedges[i]->twin = it->second;
 
 				}
-				
+			}
+
+
 				currentFace->adjacent_halfedge = tempHalfedges[0];
 				faces.push_back(currentFace);
 
 
-			}
+			
 
 
 		}
 
-		checkMesh();
 
-		return true;
 	}
 
 	checkMesh();
