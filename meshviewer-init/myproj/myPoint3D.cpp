@@ -1,6 +1,7 @@
 #include "mypoint3d.h"
 #include "myvector3d.h"
 #include <iostream>
+#include <algorithm>
 
 myPoint3D::myPoint3D()
 {
@@ -94,13 +95,63 @@ double myPoint3D::dist(myPoint3D *p1, myPoint3D *p2)
 {
 	//distance between current point, and the segment defined by p1,p2.
 	/**** TODO ****/
-	return 0.0;
+	myVector3D* vP1A = new myVector3D(X - p1->X, Y-p1->Y,Z - p1->Z);
+	myVector3D* vP1P2 = new myVector3D(p2->X - p1->X, p2->Y - p1->Y, p2->Z - p1->Z);
+	double P1P2 = vP1P2->length();
+
+	vP1P2->normalize();
+
+	//double AP1 = dist(*p1);
+	double AP1 = vP1A->length();
+	double AP2 = dist(*p2);
+
+	myVector3D* vP1H;
+	*vP1H =  (*vP1P2) * (*vP1A * *vP1P2);
+
+
+	//false
+	//return std::min({ AP1,AP2, sqrt(pow(AP1,2) - pow(vP1H->length(),2)) });
+
+
+	
+	// shortest dist to line is not part of segment
+	if (*vP1H * *vP1A < 0)
+		return AP1;
+
+	// shortest dist is outside of segment on the other side
+	else if (vP1H->length() > P1P2)
+		return AP2;
+
+	//pythagore
+	else
+		return sqrt(pow(AP1,2) - pow(vP1H->length(),2));
+
+	
+
+	
+
+
+	//return 0.0;
 }
 
 double myPoint3D::dist(myPoint3D *p1, myPoint3D *p2, myPoint3D *p3)
 {
 	//distance  between current point, and the triangled defined by p1,p2,p3.
 	/**** TODO ****/
+
+	// calculer P2P3
+	myVector3D* vP2P3 = new myVector3D(p3->X - p2->X, p3->Y - p2->Y,p3->Z - p2->Z);
+
+	// puis P2P1
+	myVector3D* vP2P1 = new myVector3D(p3->X - p2->X, p3->Y - p2->Y, p3->Z - p2->Z);
+
+	// puis cross product
+
+	// puis normaliser
+
+	//puis P1 A
+
+	// puis calculer la distance
 	return 0.0;
 }
 
