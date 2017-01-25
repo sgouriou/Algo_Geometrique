@@ -138,20 +138,24 @@ double myPoint3D::dist(myPoint3D *p1, myPoint3D *p2, myPoint3D *p3)
 {
 	//distance  between current point, and the triangled defined by p1,p2,p3.
 	/**** TODO ****/
-
+	/*
 	// calculer P2P3
 	myVector3D* vP2P3 = new myVector3D(p3->X - p2->X, p3->Y - p2->Y,p3->Z - p2->Z);
 
 	// puis P2P1
-	myVector3D* vP2P1 = new myVector3D(p3->X - p2->X, p3->Y - p2->Y, p3->Z - p2->Z);
+	myVector3D* vP2P1 = new myVector3D(p1->X - p2->X, p1->Y - p2->Y, p1->Z - p2->Z);
 
 	// puis cross product
-
+	myVector3D normPlan = vP2P3->crossproduct(vP2P1);
+	normPlan.normalize();
 	// puis normaliser
 
 	//puis P1 A
+	myVector3D* vP1A = new myVector3D(X-p1->X, Y - p1->Y, Z-p1->Z);
 
 	// puis calculer la distance
+
+	*/
 	return 0.0;
 }
 

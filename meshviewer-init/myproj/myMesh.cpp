@@ -311,11 +311,154 @@ void myMesh::normalize()
 
 void myMesh::splitFaceTRIS(myFace *f, myPoint3D *p)
 {
-	/**** TODO ****/
+	myFace* newFace = new myFace();
+	myVertex* vp = new myVertex();
+	vp->point = p;
+
+	myHalfedge* adj = new myHalfedge();
+	adj = f->adjacent_halfedge;
+
+	myHalfedge* triBefore = new myHalfedge();
+	myHalfedge* triBeforeT = new myHalfedge();
+
+	myHalfedge* triAfter = new myHalfedge();
+	myHalfedge* triAfterT = new myHalfedge();
+
+	triBefore->adjacent_face = newFace;
+
+	triBefore->twin = triBeforeT;
+	triBeforeT->twin = triBefore;
+
+	triBefore->source = vp;
+	triBeforeT->source = adj->source;
+
+	triBefore->next = adj;
+	adj->prev = triBefore;
+
+	triBeforeT->prev = adj->prev;
+	triBeforeT->prev->next = triBeforeT;
+	
+	// TriBefore DONE
+
+	triAfter->adjacent_face = newFace;
+
+	triAfter->twin = triAfterT;
+	triAfterT->twin = triAfter;
+
+	triAfter->source = adj->next->source;
+	triAfterT->source = vp;
+
+	triAfter->next = triBefore;
+	triBefore->prev = triAfter;
+
+	triAfterT->next = adj->next;
+	triAfterT->next->prev = triAfterT;
+
+	triAfter->prev = adj;
+	adj->next = triAfter;
+
+	triAfterT->prev = triBeforeT;
+	triBeforeT->next = triAfterT;
+
+	triAfterT->adjacent_face = f;
+	triBeforeT->adjacent_face = f;
+
+	adj->adjacent_face = newFace;
+	f->adjacent_halfedge = triAfterT;
+
+	newFace->adjacent_halfedge = triBeforeT;
+	
+	/// VERTICES
+
+	vp->originof = triBefore;
+
+
+	
+	// Tri After DONE
+	vertices.push_back(vp);
+	halfedges.push_back(triBefore);
+	halfedges.push_back(triBeforeT);
+
+	halfedges.push_back(triAfter);
+	halfedges.push_back(triAfterT);
+
+	faces.push_back(newFace);
+
+
+	triangulate(f);
+		
+
+
+
+
+
+
 }
 
 void myMesh::splitEdge(myHalfedge *e1, myPoint3D *p)
 {
+
+	myHalfedge* e2 = new myHalfedge();
+	myHalfedge* g2 = new myHalfedge();
+
+	myVertex* vp = new myVertex();
+	vp->point = p;
+	
+
+
+	e2->source = vp;
+	e2->adjacent_face = (e1->adjacent_face);
+
+
+	e2->twin = (e1->twin);
+
+	e2->next = e1->next;
+	e2->prev = e1;
+
+	e2->next->prev = e2;
+
+
+
+	e1->next = e2;
+
+	g2->source = vp;
+	g2->twin = e1;
+	
+	g2->adjacent_face = (e1->twin->adjacent_face);
+	g2->next = (e1->twin->next);
+	g2->prev = (e1->twin);
+	g2->next->prev = g2;
+	e1->twin->next = g2;
+
+
+	e1->twin = g2;
+
+	g2->prev->twin = e2;
+	vp->originof = e2;
+	vp->originof = g2;
+
+	vertices.push_back(vp);
+	halfedges.push_back(e2);
+	halfedges.push_back(g2);
+
+	cout << "Got HERE\n";
+
+	//triangulate(e1->adjacent_face);
+	//triangulate(e1->twin->adjacent_face);
+	
+
+
+	//myVertex* intermediate = new myVertex();
+	//intermediate->point = p;
+
+
+
+	//index = 49.3;
+
+
+
+
+
 
 	/**** TODO ****/
 }
@@ -323,6 +466,9 @@ void myMesh::splitEdge(myHalfedge *e1, myPoint3D *p)
 void myMesh::splitFaceQUADS(myFace *f, myPoint3D *p)
 {
 	/**** TODO ****/
+
+
+
 }
 
 
@@ -348,8 +494,19 @@ void myMesh::triangulate()
 //return false if already triangle, true othewise.
 bool myMesh::triangulate(myFace *f)
 {
-	if (f->isTriangle())
+
+	if (f == NULL)
+	{
+		cout << "face NULL\n";
 		return false;
+	}
+		
+	if (f->isTriangle())
+	{
+		cout << "already a triangle\n";
+		return false;
+	}
+		
 
 	//else if (f->isQuad())
 	//{
@@ -382,12 +539,14 @@ bool myMesh::triangulate(myFace *f)
 	//}
 
 	/**** TODO ****/
-	vector<myHalfedge*> in;
-	vector<myHalfedge*> out;
-	vector<myFace*> nf;
+	vector<myHalfedge*> in = vector<myHalfedge*>();
+	vector<myHalfedge*> out = vector<myHalfedge*>();
+	vector<myFace*> nf = vector<myFace*>();
 
-	myHalfedge* e = f->adjacent_halfedge->next;
+	myHalfedge* e = new myHalfedge();
+	e = f->adjacent_halfedge->next;
 	int n = f->getSize();
+	cout << " size of face : " << n << endl;
 
 	for (int i = 0; i < n - 2; i++)
 	{
@@ -402,7 +561,7 @@ bool myMesh::triangulate(myFace *f)
 	out[n - 3] = in[0]->prev;
 
 
-	myHalfedge* nextE;
+	myHalfedge* nextE = new myHalfedge();
 	for (int i = 0; i < n - 2; i++)
 	{
 		nextE = e->next;
@@ -475,3 +634,13 @@ bool myMesh::triangulate(myFace *f)
 	return true;
 }
 
+void myMesh::inflateMesh(double dist)
+{
+	for(myVertex* v : vertices)
+	{
+		*(v->point) = *(v->point) + (*(v->normal))*dist;
+
+	}
+
+
+}

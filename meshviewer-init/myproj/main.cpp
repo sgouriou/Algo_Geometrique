@@ -45,7 +45,10 @@ void menu(int item)
 	{
 	case MENU_TRIANGULATE:
 		{
+			
 			m->triangulate();
+			clear();
+			m->checkMesh();
 			m->computeNormals();
 			makeBuffers(m);
 			break;
@@ -116,9 +119,10 @@ void menu(int item)
 		}
 	case MENU_INFLATE:
 		{
-			for (vector<myVertex *>::iterator it = m->vertices.begin(); it != m->vertices.end(); it++)
+		m->inflateMesh(0.1);
+			/*for (vector<myVertex *>::iterator it = m->vertices.begin(); it != m->vertices.end(); it++)
 				*((*it)->point) = *((*it)->point) + *((*it)->normal)*0.01;
-			break;
+			break;*/
 			makeBuffers(m);
 	}
 	case MENU_CATMULLCLARK:
@@ -131,8 +135,12 @@ void menu(int item)
 		}
 	case MENU_SPLITEDGE:
 		{
-			if (pickedpoint != NULL && closest_edge != NULL)	
-				m->splitEdge(closest_edge, pickedpoint);
+
+			m->splitEdge(m->halfedges[0], new myPoint3D(0, 0, 0));
+			m->checkMesh();
+
+			//if (pickedpoint != NULL && closest_edge != NULL)	
+				//m->splitEdge(closest_edge, pickedpoint);
 			clear();
 			m->computeNormals();
 			makeBuffers(m);
@@ -140,8 +148,12 @@ void menu(int item)
 		}		
 	case MENU_SPLITFACE:
 		{
-			if (pickedpoint != NULL && closest_face != NULL)	
-				m->splitFaceTRIS(closest_face, pickedpoint);
+			clear();
+			m->splitFaceTRIS(m->faces[0], new myPoint3D(0, 0, 0));
+			m->checkMesh();
+
+			//if (pickedpoint != NULL && closest_face != NULL)	
+			//	m->splitFaceTRIS(closest_face, pickedpoint);
 			clear();		
 			m->computeNormals();
 			makeBuffers(m);

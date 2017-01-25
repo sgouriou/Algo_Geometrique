@@ -28,6 +28,8 @@ public:
 	void triangulate();
 	bool triangulate(myFace *);
 
+	void inflateMesh(double dist);
+
 	void clear();
 
 	myMesh(void);
