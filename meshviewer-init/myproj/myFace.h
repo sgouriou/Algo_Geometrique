@@ -2,6 +2,7 @@
 
 class myHalfedge;
 class myVector3D;
+class myPoint3D;
 
 class myFace
 {
@@ -10,9 +11,10 @@ public:
 
 	myVector3D *normal;
 
-
+	myPoint3D *centroid;
 
 	int index; //use this variable as you wish.
+	static int indexF;
 
 	void computeNormal();
 	myFace(void);
@@ -21,5 +23,6 @@ public:
 	bool isTriangle();
 	bool isQuad();
 	int getSize();
+	
 
 };

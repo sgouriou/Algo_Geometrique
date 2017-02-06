@@ -4,6 +4,7 @@
 #include "myVertex.h"
 #include <vector>
 #include <string>
+#include <algorithm>
 
 class myMesh
 {
@@ -31,6 +32,8 @@ public:
 	void inflateMesh(double dist);
 
 	void clear();
+	void checkFacesEdgeSize();
+	void computeCentroids();
 
 	myMesh(void);
 	~myMesh(void);

@@ -523,6 +523,9 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'h':
 		cout << "The keys for various algorithms are:\n";
 		break;
+	case 'w':
+		menu(MENU_DRAWWIREFRAME);
+
 	}
 	glutPostRedisplay();
 }

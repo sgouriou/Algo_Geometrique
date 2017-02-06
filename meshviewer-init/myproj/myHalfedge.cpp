@@ -1,5 +1,7 @@
 #include "myHalfedge.h"
 
+int myHalfedge::indexHE = 0;
+
 myHalfedge::myHalfedge(void)
 {
 	source = NULL; 
@@ -7,6 +9,7 @@ myHalfedge::myHalfedge(void)
 	next = NULL;  
 	prev = NULL;  
 	twin = NULL;  
+	index = myHalfedge::indexHE++;
 }
 
 void myHalfedge::copy(myHalfedge *ie)

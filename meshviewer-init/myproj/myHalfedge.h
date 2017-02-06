@@ -17,6 +17,9 @@ public:
 	myHalfedge *twin;  
 
 	int index; //use as you wish.
+	static int indexHE;
+
+
 
 	myHalfedge(void);
 	void copy(myHalfedge *);

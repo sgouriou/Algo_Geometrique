@@ -6,10 +6,14 @@
 
 #include <iostream>
 
+int myFace::indexF = 0;
+
 myFace::myFace(void)
 {
 	adjacent_halfedge = NULL;
+	centroid = new myPoint3D(0, 0, 0);
 	normal = new myVector3D(1.0, 1.0, 1.0);
+	index = indexF++;
 }
 
 myFace::~myFace(void)
@@ -61,3 +65,4 @@ int myFace::getSize()
 
 		return i;
 }
+

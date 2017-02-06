@@ -149,7 +149,8 @@ void menu(int item)
 	case MENU_SPLITFACE:
 		{
 			clear();
-			m->splitFaceTRIS(m->faces[0], new myPoint3D(0, 0, 0));
+			//m->splitFaceTRIS(m->faces[0], new myPoint3D(0, 0, 0));
+			m->splitFaceQUADS(m->faces[0], new myPoint3D(0, 0, 0));
 			m->checkMesh();
 
 			//if (pickedpoint != NULL && closest_face != NULL)	
